@@ -1,0 +1,9 @@
+package com.example.kevents.repository;
+
+import com.example.kevents.model.Event;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface EventRepository extends JpaRepository<Event, Long> {
+}
