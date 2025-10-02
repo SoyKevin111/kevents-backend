@@ -1,4 +1,4 @@
-package com.example.kevents.auth;
+package com.example.kevents.auth.jwt;
 
 import java.sql.Date;
 import java.time.Instant;

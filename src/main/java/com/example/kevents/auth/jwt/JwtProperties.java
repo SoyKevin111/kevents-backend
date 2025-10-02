@@ -1,4 +1,4 @@
-package com.example.kevents.auth;
+package com.example.kevents.auth.jwt;
 
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.example.kevents.auth;
+package com.example.kevents.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

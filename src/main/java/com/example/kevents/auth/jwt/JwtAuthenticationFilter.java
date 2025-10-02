@@ -1,4 +1,4 @@
-package com.example.kevents.auth;
+package com.example.kevents.auth.jwt;
 
 import java.io.IOException;
 import java.util.Collection;

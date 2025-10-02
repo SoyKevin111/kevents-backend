@@ -1,4 +1,4 @@
-package com.example.kevents.auth;
+package com.example.kevents.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +18,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import com.example.kevents.auth.UserAuthService;
+import com.example.kevents.auth.jwt.JwtAuthenticationFilter;
+import com.example.kevents.auth.jwt.JwtUtils;
 
 @Configuration
 @EnableWebSecurity
