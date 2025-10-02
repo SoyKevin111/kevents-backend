@@ -1,5 +1,6 @@
 package com.example.kevents.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,13 +19,12 @@ import com.example.kevents.factory.ReservationFactory;
 import com.example.kevents.service.ReservationService;
 
 @RestController
-@RequestMapping("/kevents/reservations")
+@RequiredArgsConstructor
+@RequestMapping("/reservations")
 public class ReservaController {
 
-   @Autowired
-   private ReservationService reservationService;
-   @Autowired
-   private ReservationFactory reservationFactory;
+   private final ReservationService reservationService;
+   private final ReservationFactory reservationFactory;
 
    @PostMapping
    public ResponseEntity<?> createReservation(@RequestBody ReservationRequest reservationRequest) {

@@ -2,6 +2,7 @@ package com.example.kevents.factory;
 
 import java.time.LocalDate;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,16 +15,13 @@ import com.example.kevents.service.UserService;
 import com.example.kevents.validation.InputValidation;
 
 @Component
+@RequiredArgsConstructor
 public class ReservationFactory {
 
-    @Autowired
-    private EventService eventService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ReservationService reservationService;
-    @Autowired
-    private InputValidation inputValidation;
+    private final EventService eventService;
+    private final UserService userService;
+    private final ReservationService reservationService;
+    private final InputValidation inputValidation;
 
     public Reservation forCreate(ReservationRequest dto) {
         Reservation reservation = new Reservation();

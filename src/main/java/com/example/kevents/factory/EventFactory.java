@@ -2,6 +2,7 @@ package com.example.kevents.factory;
 
 import java.time.LocalDate;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,18 +16,15 @@ import com.example.kevents.validation.EventValidation;
 import com.example.kevents.validation.InputValidation;
 
 @Component
+@RequiredArgsConstructor
 public class EventFactory {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private EventService eventService;
-    @Autowired
-    private EventMapper eventMapper;
-    @Autowired
-    private InputValidation inputValidation;
-    @Autowired
-    private EventValidation eventValidation;
+    private final UserService userService;
+    private final EventService eventService;
+    private final EventMapper eventMapper;
+    private final InputValidation inputValidation;
+    private final EventValidation eventValidation;
+
 
     public Event forCreate(EventRequest dto) {
         Event event = this.eventMapper.toEntity(dto);

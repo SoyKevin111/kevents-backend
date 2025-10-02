@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +16,17 @@ import com.example.kevents.validation.EventValidation;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class EventService {
 
-   @Autowired
-   private EventRepository eventRepository;
-   @Autowired
-   private EventValidation eventValidation;
+   private final EventRepository eventRepository;
+   private final EventValidation eventValidation;
 
    public Event create(Event event) {
       this.eventValidation.validateOverlapsDate(event);
       try {
+
          return this.eventRepository.save(event);
       } catch (Exception e) {
          log.error(e.getMessage());

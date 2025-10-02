@@ -2,6 +2,7 @@ package com.example.kevents.validation;
 
 import java.time.LocalDate;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +12,10 @@ import com.example.kevents.model.Event;
 import com.example.kevents.repository.EventRepository;
 
 @Component
+@RequiredArgsConstructor
 public class EventValidation {
 
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
     public void validateOverlapsDate(Event newEvent) {
         System.out.println(newEvent);

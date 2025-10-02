@@ -9,8 +9,10 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class KeventsApplication {
 
 	public static void main(String[] args) {
+		@SuppressWarnings("unused")
 		Dotenv dotenv = Dotenv.load();
-		SpringApplication.run(KeventsApplication.class, args);
+		var context = SpringApplication.run(KeventsApplication.class, args);
+		System.out.println("Swagger UI: http://localhost:8080/swagger-ui.html");
 	}
 
 }

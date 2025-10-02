@@ -1,5 +1,6 @@
 package com.example.kevents.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +18,12 @@ import com.example.kevents.service.UserService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/kevents/users")
+@RequiredArgsConstructor
+@RequestMapping("/users")
 public class UserController {
 
-   @Autowired
-   private UserService userService;
-   @Autowired
-   private UserMapper userMapper;
+   private final UserService userService;
+   private final UserMapper userMapper;
 
    @PostMapping
    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest) {

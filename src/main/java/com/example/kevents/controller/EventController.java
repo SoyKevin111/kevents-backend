@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,15 +21,15 @@ import com.example.kevents.model.Event;
 import com.example.kevents.service.EventService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/kevents/events")
+@RequiredArgsConstructor
+@RequestMapping("/events")
 public class EventController {
 
-   @Autowired
-   private EventService eventService;
-   @Autowired
-   EventFactory eventFactory;
+   private final EventService eventService;
+   private final EventFactory eventFactory;
 
    @PostMapping
    public ResponseEntity<?> createEvent(@Valid @RequestBody EventRequest eventRequest) {

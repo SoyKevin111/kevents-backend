@@ -2,6 +2,7 @@ package com.example.kevents.service;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +17,13 @@ import com.example.kevents.validation.ReservationValidation;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class ReservationService {
 
-   @Autowired
-   private EventRepository eventRepository;
-   @Autowired
-   private ReservationRepository reservationRepository;
-   @Autowired
-   private ReservationValidation reservationValidation;
+   private final EventRepository eventRepository;
+   private final ReservationRepository reservationRepository;
+   private final ReservationValidation reservationValidation;
 
    public Reservation create(Reservation reservation) {
       this.reservationValidation.validateCapacity(reservation.getSeats(), reservation.getEvent().getCapacity());
