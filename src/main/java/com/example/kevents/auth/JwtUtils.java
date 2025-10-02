@@ -6,6 +6,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
@@ -16,9 +19,6 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.kevents.exceptions.ServerInternalError;
 
-import io.github.cdimascio.dotenv.Dotenv;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,22 +27,17 @@ import lombok.Setter;
 @Setter
 public class JwtUtils {
 
-    Dotenv dotenv = Dotenv.load();
-    private String jwtSecretKey;
-    private String jwtUser;
+    @Autowired
+    private JwtProperties jwt;
+
     private Instant now = Instant.now();
     private Instant expirationTime = now.plus(30, ChronoUnit.MINUTES);
-
-    public JwtUtils() {
-        this.jwtSecretKey = dotenv.get("JWT_SECRET_KEY");
-        this.jwtUser = dotenv.get("JWT_USER");
-    }
 
     // crear token
     public String createToken(Authentication authentication) {
         try {
-            System.out.println("private Key: " + this.jwtSecretKey);
-            Algorithm algorithm = Algorithm.HMAC256(this.jwtSecretKey);
+            System.out.println("private Key: " + this.jwt.getJwtSecret());
+            Algorithm algorithm = Algorithm.HMAC256(this.jwt.getJwtSecret());
             String email = authentication.getPrincipal().toString();
 
             String authorities = authentication.getAuthorities()
@@ -51,7 +46,7 @@ public class JwtUtils {
                     .collect(Collectors.joining(","));
 
             return JWT.create() // creando el token
-                    .withIssuer(this.jwtUser) // autor
+                    .withIssuer(this.jwt.getJwtUser()) // autor
                     .withSubject(email)
                     .withClaim("authorities", authorities)
                     .withIssuedAt(Date.from(now))
@@ -68,9 +63,9 @@ public class JwtUtils {
 
     public DecodedJWT validateToken(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(this.jwtSecretKey);
+            Algorithm algorithm = Algorithm.HMAC256(this.jwt.getJwtSecret());
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer(this.jwtUser)
+                    .withIssuer(this.jwt.getJwtUser())
                     .build();
             return verifier.verify(token);
         } catch (JWTVerificationException e) {
@@ -79,7 +74,7 @@ public class JwtUtils {
     }
 
     public String extractEmail(DecodedJWT decodedJWT) {
-        return decodedJWT.getSubject(); //email como username
+        return decodedJWT.getSubject(); // email como username
     }
 
     public Claim getSpecificClaim(DecodedJWT decodedJWT, String claimName) {

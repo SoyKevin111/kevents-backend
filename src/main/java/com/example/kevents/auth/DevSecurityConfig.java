@@ -15,9 +15,9 @@ public class DevSecurityConfig {
     @Bean
     public SecurityFilterChain devSecurity(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-                .httpBasic().disable();
+                .csrf(csrf -> csrf.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         return http.build();
     }
 
