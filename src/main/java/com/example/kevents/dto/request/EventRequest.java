@@ -15,7 +15,7 @@ public class EventRequest {
    private String title;
    private String description;
    private String location;
-   private int capacity;
+   private Integer capacity;
    private String startDate;
    private String endDate;
    private Long organizerId; //ROL ORGANIZER

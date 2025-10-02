@@ -25,7 +25,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Reservation {
 
-
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
@@ -47,4 +46,6 @@ public class Reservation {
 
    @Column(nullable = false)
    private LocalDate createdAt;
+
+
 }

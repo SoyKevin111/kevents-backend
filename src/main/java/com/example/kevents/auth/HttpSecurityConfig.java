@@ -3,6 +3,7 @@ package com.example.kevents.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Profile("prod")
 public class HttpSecurityConfig {
 
     @Autowired
@@ -69,54 +71,50 @@ public class HttpSecurityConfig {
     public SecurityFilterChain userSecurity(HttpSecurity http) throws Exception {
         applyCommonConfig(http);
         return http
-                .securityMatcher("/kevents/users")
+                .securityMatcher("/kevents/users/**")
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST, "/kevents/users").hasRole("ADMIN");
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/users").hasRole("ADMIN");
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/users/*").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.POST, "/kevents/users/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.GET, "/kevents/users/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.GET, "/kevents/users/**").hasRole("ADMIN");
                 })
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
-
 
     @Bean
     @Order(3)
     public SecurityFilterChain eventsSecurity(HttpSecurity http) throws Exception {
-                applyCommonConfig(http);
+        applyCommonConfig(http);
         return http
-                .securityMatcher("/kevents/events")
+                .securityMatcher("/kevents/events/**")
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST, "/kevents/events").hasRole("ORGANIZER");
+                    auth.requestMatchers(HttpMethod.POST, "/kevents/events/**").hasRole("ORGANIZER");
                     auth.requestMatchers(HttpMethod.GET, "/kevents/events/**").permitAll(); // user or all
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/users/**").permitAll();
-                    auth.requestMatchers(HttpMethod.PUT, "/kevents/users/**").hasAnyRole("ORGANIZER","ADMIN");
-                    auth.requestMatchers(HttpMethod.DELETE, "/kevents/users/**").hasAnyRole("ORGANIZER","ADMIN");
+                    auth.requestMatchers(HttpMethod.GET, "/kevents/filter/**").permitAll();
+                    auth.requestMatchers(HttpMethod.PUT, "/kevents/events/**").hasAnyRole("ORGANIZER", "ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/kevents/events/**").hasAnyRole("ORGANIZER", "ADMIN");
                 })
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
 
-    
     @Bean
     @Order(4)
     public SecurityFilterChain reservationsSecurity(HttpSecurity http) throws Exception {
-                applyCommonConfig(http);
+        applyCommonConfig(http);
         return http
-                .securityMatcher("/kevents/reservations")
+                .securityMatcher("/kevents/reservations/**")
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST, "/kevents/reservations").hasRole("ATTENDEE");
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/reservations").hasRole("ATTENDEE"); 
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/reservations/event/**").hasAnyRole("ORGANIZER","ADMIN"); 
-                    auth.requestMatchers(HttpMethod.PUT, "/kevents/reservations/**").hasAnyRole("ATETENDEE","ADMIN"); 
-                    auth.requestMatchers(HttpMethod.DELETE, "/kevents/reservations/**").hasAnyRole("USER","ADMIN"); 
-                    
+                    auth.requestMatchers(HttpMethod.POST, "/kevents/reservations/**").hasRole("ATTENDEE");
+                    auth.requestMatchers(HttpMethod.GET, "/kevents/reservations/**").hasRole("ATTENDEE");
+                    auth.requestMatchers(HttpMethod.GET, "/kevents/reservations/event/**").hasAnyRole("ORGANIZER",
+                            "ADMIN");
+                    auth.requestMatchers(HttpMethod.PUT, "/kevents/reservations/**").hasAnyRole("ATTENDEE", "ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/kevents/reservations/**").hasAnyRole("ADMIN");
+
                 })
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
-
-
-
 
 }

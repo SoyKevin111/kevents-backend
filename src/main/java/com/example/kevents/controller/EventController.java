@@ -1,19 +1,27 @@
 package com.example.kevents.controller;
 
-import com.example.kevents.dto.request.EventRequest;
-import com.example.kevents.dto.response.EventResponse;
-import com.example.kevents.model.Event;
-import com.example.kevents.service.EventService;
-import com.example.kevents.service.UserService;
-import com.example.kevents.utils.GeneralMapper;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.kevents.dto.request.EventRequest;
+import com.example.kevents.dto.response.EventResponse;
+import com.example.kevents.factory.EventFactory;
+import com.example.kevents.model.Event;
+import com.example.kevents.service.EventService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/kevents/events")
@@ -22,18 +30,12 @@ public class EventController {
    @Autowired
    private EventService eventService;
    @Autowired
-   private UserService userService;
-   @Autowired
-   private GeneralMapper mapper;
+   EventFactory eventFactory;
 
-   @PostMapping // solo organizer
+   @PostMapping
    public ResponseEntity<?> createEvent(@Valid @RequestBody EventRequest eventRequest) {
-      Event event = this.mapper.mapToEntity(eventRequest, Event.class);
-      event.setId(null);
-      event.setStartDate(LocalDate.parse(eventRequest.getStartDate()));
-      event.setEndDate(LocalDate.parse(eventRequest.getEndDate()));
       try {
-         return ResponseEntity.ok().body(this.eventService.create(event, eventRequest.getOrganizerId()));
+         return ResponseEntity.ok().body(this.eventService.create(this.eventFactory.forCreate(eventRequest)));
       } catch (Exception e) {
          return ResponseEntity.badRequest().body(e.getMessage());
       }
@@ -46,11 +48,11 @@ public class EventController {
          case "date" -> results = this.eventService.findByDate(LocalDate.parse(value));
          case "location" -> results = this.eventService.findByLocation(value);
          case "organizer" ->
-            results = this.eventService.findByOrganizer(value); // se le pasara la credencial del usuario autenticado
-         default -> ResponseEntity.badRequest();
+            results = this.eventService.findByOrganizer(value);
+         default -> ResponseEntity.badRequest().build();
       }
       if (results.isEmpty()) {
-         return ResponseEntity.badRequest().build();
+         return ResponseEntity.badRequest().body("Events not found.");
       }
       return ResponseEntity.ok(results
             .stream()
@@ -83,17 +85,11 @@ public class EventController {
       }
    }
 
-   @PutMapping("/{id}") // solo organizer y admin, validar con authentication el organizador
-   public ResponseEntity<?> updateEvent(@RequestBody EventRequest eventRequest, @PathVariable Long id) { // sin valid
-                                                                                                         // porque es
-                                                                                                         // opcional xd
-      Event event = this.mapper.mapToEntity(eventRequest, Event.class);
-      event.setId(null);
-      if (eventRequest.getOrganizerId() != null) {
-         event.setOrganizer(this.userService.findById(eventRequest.getOrganizerId()));
-      }
+   @PutMapping("/{id}")
+   public ResponseEntity<?> updateEvent(@RequestBody EventRequest eventRequest, @PathVariable Long id) {
+      Event event = this.eventFactory.forUpdate(eventRequest, id);
       try {
-         return ResponseEntity.ok(this.eventService.update(event, id));
+         return ResponseEntity.ok(this.eventService.update(event));
       } catch (Exception e) {
          return ResponseEntity.badRequest().body(e.getMessage());
       }
