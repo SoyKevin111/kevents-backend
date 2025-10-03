@@ -1,8 +1,8 @@
 package com.example.kevents.controller;
 
 import com.example.kevents.model.Reservation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.kevents.dto.request.ReservationRequest;
+import com.example.kevents.dto.request.ReservationCreateRequest;
 import com.example.kevents.dto.request.ReservationUpdateRequest;
 import com.example.kevents.factory.ReservationFactory;
 import com.example.kevents.service.ReservationService;
@@ -31,8 +31,8 @@ public class ReservaController {
    private final ReservationFactory reservationFactory;
 
    @PostMapping
-   public ResponseEntity<?> createReservation(@RequestBody ReservationRequest reservationRequest) {
-      Reservation reservation = this.reservationService.create(this.reservationFactory.forCreate(reservationRequest));
+   public ResponseEntity<?> createReservation(@Valid  @RequestBody ReservationCreateRequest reservationCreateRequest) {
+      Reservation reservation = this.reservationService.create(this.reservationFactory.forCreate(reservationCreateRequest));
       URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(reservation.getId()).toUri();
       return ResponseEntity.created(location).body(reservation);
    }

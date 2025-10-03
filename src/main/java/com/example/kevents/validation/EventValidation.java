@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import com.example.kevents.dto.request.EventRequest;
+import com.example.kevents.dto.request.EventUpdateRequest;
 import com.example.kevents.exceptions.model.InternalServerErrorException;
 import com.example.kevents.model.Event;
 import com.example.kevents.repository.EventRepository;
@@ -28,7 +28,7 @@ public class EventValidation {
         ;
     }
 
-    public void validateBeforeUpdate(EventRequest dto, Event event) {
+    public void validateBeforeUpdate(EventUpdateRequest dto, Event event) {
         LocalDate inDto = LocalDate.parse(dto.getStartDate());
         LocalDate outDto = LocalDate.parse(dto.getEndDate());
         System.out.println(dto);

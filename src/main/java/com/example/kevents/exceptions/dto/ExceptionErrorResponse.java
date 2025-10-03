@@ -1,4 +1,4 @@
-package com.example.kevents.dto.response;
+package com.example.kevents.exceptions.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,8 +8,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.example.kevents.dto.FieldErrorDTO;
 
 @Getter
 @Setter

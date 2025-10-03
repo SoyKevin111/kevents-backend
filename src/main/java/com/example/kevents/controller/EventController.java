@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.kevents.dto.request.EventCreateRequest;
+import com.example.kevents.dto.request.EventUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.kevents.dto.request.EventRequest;
 import com.example.kevents.dto.response.EventResponse;
 import com.example.kevents.factory.EventFactory;
 import com.example.kevents.model.Event;
@@ -35,9 +36,8 @@ public class EventController {
    private final EventFactory eventFactory;
 
    @PostMapping
-   public ResponseEntity<?> createEvent(@Valid @RequestBody EventRequest eventRequest) {
-      Event event = this.eventService.create(this.eventFactory.forCreate(eventRequest));
-      this.eventService.create(this.eventFactory.forCreate(eventRequest));
+   public ResponseEntity<?> createEvent(@Valid @RequestBody EventCreateRequest dto) {
+      Event event = this.eventService.create(this.eventFactory.forCreate(dto));
       URI location = ServletUriComponentsBuilder
          .fromCurrentRequest()
          .path("/{id}")
@@ -90,8 +90,8 @@ public class EventController {
    }
 
    @PutMapping("/{id}")
-   public ResponseEntity<?> updateEvent(@RequestBody EventRequest eventRequest, @PathVariable Long id) {
-      Event event = this.eventFactory.forUpdate(eventRequest, id);
+   public ResponseEntity<?> updateEvent(@RequestBody EventUpdateRequest dto, @PathVariable Long id) {
+      Event event = this.eventFactory.forUpdate(dto, id);
       return ResponseEntity.ok(this.eventService.update(event));
    }
 

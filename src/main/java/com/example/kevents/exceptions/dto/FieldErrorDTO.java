@@ -1,4 +1,4 @@
-package com.example.kevents.dto;
+package com.example.kevents.exceptions.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

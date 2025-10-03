@@ -1,7 +1,8 @@
 package com.example.kevents.controller;
 
+import com.example.kevents.dto.request.UserCreateRequest;
+import com.example.kevents.dto.request.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.kevents.dto.request.UserRequest;
 import com.example.kevents.mapper.UserMapper;
 import com.example.kevents.model.User;
 import com.example.kevents.service.UserService;
@@ -29,8 +29,8 @@ public class UserController {
    private final UserMapper userMapper;
 
    @PostMapping
-   public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest) {
-      User user = this.userMapper.toEntity(userRequest);
+   public ResponseEntity<?> createUser(@Valid @RequestBody UserCreateRequest dto) {
+      User user = this.userMapper.toEntity(dto);
       URI location = ServletUriComponentsBuilder
          .fromCurrentRequest()
          .path("/{id}")

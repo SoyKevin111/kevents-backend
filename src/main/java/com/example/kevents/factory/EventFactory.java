@@ -2,11 +2,11 @@ package com.example.kevents.factory;
 
 import java.time.LocalDate;
 
+import com.example.kevents.dto.request.EventCreateRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.kevents.dto.request.EventRequest;
+import com.example.kevents.dto.request.EventUpdateRequest;
 import com.example.kevents.mapper.EventMapper;
 import com.example.kevents.model.Event;
 import com.example.kevents.model.User;
@@ -26,7 +26,7 @@ public class EventFactory {
     private final EventValidation eventValidation;
 
 
-    public Event forCreate(EventRequest dto) {
+    public Event forCreate(EventCreateRequest dto) {
         Event event = this.eventMapper.toEntity(dto);
         User organizer = this.userService.findById(dto.getOrganizerId());
         event.setOrganizer(organizer);
@@ -35,7 +35,7 @@ public class EventFactory {
         return event;
     }
 
-    public Event forUpdate(EventRequest dto, Long id) {
+    public Event forUpdate(EventUpdateRequest dto, Long id) {
         Event eventFind = this.eventService.findById(id);
         this.inputValidation.setIfNotBlank(dto.getTitle(), e -> eventFind.setTitle(e));
         this.inputValidation.setIfNotBlank(dto.getDescription(), e -> eventFind.setDescription(e));

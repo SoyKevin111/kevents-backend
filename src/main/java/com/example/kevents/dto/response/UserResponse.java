@@ -1,14 +1,8 @@
 package com.example.kevents.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 public class UserResponse {
    private String username;
    private String email;

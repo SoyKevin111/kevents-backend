@@ -3,10 +3,9 @@ package com.example.kevents.factory;
 import java.time.LocalDate;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.kevents.dto.request.ReservationRequest;
+import com.example.kevents.dto.request.ReservationCreateRequest;
 import com.example.kevents.dto.request.ReservationUpdateRequest;
 import com.example.kevents.model.Reservation;
 import com.example.kevents.service.EventService;
@@ -23,7 +22,7 @@ public class ReservationFactory {
     private final ReservationService reservationService;
     private final InputValidation inputValidation;
 
-    public Reservation forCreate(ReservationRequest dto) {
+    public Reservation forCreate(ReservationCreateRequest dto) {
         Reservation reservation = new Reservation();
         reservation.setSeats(dto.getSeats());
         reservation.setAttendee(userService.findById(dto.getAttendeeId()));

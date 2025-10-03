@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventRequest {
+public class EventUpdateRequest {
    private String title;
    private String description;
    private String location;
