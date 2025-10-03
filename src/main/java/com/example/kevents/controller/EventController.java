@@ -73,9 +73,9 @@ public class EventController {
 
    @GetMapping("/{id}") // detalles de un evento (publico)
    public ResponseEntity<?> getEventById(@PathVariable Long id) {
-      try {
          Event event = this.eventService.findById(id);
-         return ResponseEntity.ok(EventResponse.builder()
+         return ResponseEntity.ok(
+            EventResponse.builder()
             .title(event.getTitle())
             .capacity(event.getCapacity())
             .description(event.getDescription())
@@ -84,9 +84,6 @@ public class EventController {
             .endDate(event.getEndDate().toString())
             .organizer(event.getOrganizer().getUsername())
             .build());
-      } catch (Exception e) {
-         return ResponseEntity.badRequest().body(e.getMessage());
-      }
    }
 
    @PutMapping("/{id}")

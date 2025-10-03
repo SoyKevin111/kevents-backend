@@ -75,28 +75,29 @@ public class HttpSecurityConfig {
     public SecurityFilterChain userSecurity(HttpSecurity http) throws Exception {
         applyCommonConfig(http);
         return http
-                .securityMatcher("/kevents/users/**")
+                .securityMatcher("/users/**")
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST, "/kevents/users/**").hasRole("ADMIN");
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/users/**").hasRole("ADMIN");
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/users/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.POST, "/users/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.GET, "/users/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.GET, "/users/**").hasRole("ADMIN");
                 })
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
 
+    // restricciones para events
     @Bean
     @Order(3)
     public SecurityFilterChain eventsSecurity(HttpSecurity http) throws Exception {
         applyCommonConfig(http);
         return http
-                .securityMatcher("/kevents/events/**")
+                .securityMatcher("/events/**")
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST, "/kevents/events/**").hasRole("ORGANIZER");
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/events/**").permitAll(); // user or all
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/filter/**").permitAll();
-                    auth.requestMatchers(HttpMethod.PUT, "/kevents/events/**").hasAnyRole("ORGANIZER", "ADMIN");
-                    auth.requestMatchers(HttpMethod.DELETE, "/kevents/events/**").hasAnyRole("ORGANIZER", "ADMIN");
+                    auth.requestMatchers(HttpMethod.POST, "/events/**").hasRole("ORGANIZER");
+                    auth.requestMatchers(HttpMethod.GET, "/events/**").permitAll(); // user or all
+                    auth.requestMatchers(HttpMethod.GET, "/filter/**").permitAll();
+                    auth.requestMatchers(HttpMethod.PUT, "/events/**").hasAnyRole("ORGANIZER", "ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/events/**").hasAnyRole("ORGANIZER", "ADMIN");
                 })
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
@@ -107,14 +108,14 @@ public class HttpSecurityConfig {
     public SecurityFilterChain reservationsSecurity(HttpSecurity http) throws Exception {
         applyCommonConfig(http);
         return http
-                .securityMatcher("/kevents/reservations/**")
+                .securityMatcher("/reservations/**")
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST, "/kevents/reservations/**").hasRole("ATTENDEE");
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/reservations/**").hasRole("ATTENDEE");
-                    auth.requestMatchers(HttpMethod.GET, "/kevents/reservations/event/**").hasAnyRole("ORGANIZER",
+                    auth.requestMatchers(HttpMethod.POST, "/reservations/**").hasRole("ATTENDEE");
+                    auth.requestMatchers(HttpMethod.GET, "/reservations/**").hasRole("ATTENDEE");
+                    auth.requestMatchers(HttpMethod.GET, "/reservations/event/**").hasAnyRole("ORGANIZER",
                             "ADMIN");
-                    auth.requestMatchers(HttpMethod.PUT, "/kevents/reservations/**").hasAnyRole("ATTENDEE", "ADMIN");
-                    auth.requestMatchers(HttpMethod.DELETE, "/kevents/reservations/**").hasAnyRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.PUT, "/reservations/**").hasAnyRole("ATTENDEE", "ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/reservations/**").hasAnyRole("ADMIN");
 
                 })
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), BasicAuthenticationFilter.class)
