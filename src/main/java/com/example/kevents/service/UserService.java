@@ -2,6 +2,7 @@ package com.example.kevents.service;
 
 import java.util.List;
 
+import com.example.kevents.exceptions.model.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class UserService {
          return this.userRepository.findAll();
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new InternalServerErrorException("Error finding users.");
+         throw new ResourceNotFoundException("Error finding users.");
       }
    }
 
@@ -44,7 +45,7 @@ public class UserService {
          return this.userRepository.findById(id).orElseThrow(() -> new InternalServerErrorException("User not found xd."));
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new InternalServerErrorException("Error finding user by id.");
+         throw new ResourceNotFoundException("Error finding user by id.");
       }
    }
 
@@ -54,7 +55,7 @@ public class UserService {
                .orElseThrow(() -> new InternalServerErrorException("User not found for view serie."));
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new InternalServerErrorException("Error finding user by email.");
+         throw new ResourceNotFoundException("Error finding user by email.");
       }
    }
 

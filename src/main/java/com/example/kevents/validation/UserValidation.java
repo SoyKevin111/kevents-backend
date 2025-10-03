@@ -1,5 +1,6 @@
 package com.example.kevents.validation;
 
+import com.example.kevents.exceptions.model.ConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ public class UserValidation {
 
     public void validateEmail(User user) {
         if (this.userRepository.existsByEmail(user.getEmail())) {
-            throw new InternalServerErrorException("Email already exists.");
+            throw new ConflictException("Email already exists.");
         }
     }
 

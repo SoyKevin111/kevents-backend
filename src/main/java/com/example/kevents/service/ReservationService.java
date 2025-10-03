@@ -2,6 +2,7 @@ package com.example.kevents.service;
 
 import java.util.List;
 
+import com.example.kevents.exceptions.model.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,13 +40,13 @@ public class ReservationService {
          return this.reservationRepository.findByAttendeeEmail(gmail);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new InternalServerErrorException("Error finding reservations by attendee email.");
+         throw new ResourceNotFoundException("Error finding reservations by attendee email.");
       }
    }
 
    public List<Reservation> findByEventId(Long id) {
       Event event = eventRepository.findById(id)
-            .orElseThrow(() -> new InternalServerErrorException("Event not found for find reservation."));
+            .orElseThrow(() -> new ResourceNotFoundException("Event not found for find reservation."));
       return this.reservationRepository.findByEventAndStatusNot(event, Status.CANCELLED);
    }
 
@@ -61,7 +62,7 @@ public class ReservationService {
 
    public void cancelById(Long id) {
       Reservation reservationFind = this.reservationRepository.findById(id)
-            .orElseThrow(() -> new InternalServerErrorException("Reservation not found for cancel reservation."));
+            .orElseThrow(() -> new ResourceNotFoundException("Reservation not found for cancel reservation."));
       try {
          reservationFind.setStatus(Status.CANCELLED);
          this.reservationRepository.save(reservationFind);
@@ -73,7 +74,7 @@ public class ReservationService {
 
    public Reservation findById(Long id) {
       return this.reservationRepository.findById(id)
-            .orElseThrow(() -> new InternalServerErrorException("Error finding reservation."));
+            .orElseThrow(() -> new ResourceNotFoundException("Error finding reservation."));
    }
 
 }

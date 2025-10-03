@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.kevents.exceptions.model.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class EventService {
                .collect(Collectors.toList());
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new InternalServerErrorException("Error finding events by date.");
+         throw new ResourceNotFoundException("Error finding events by date.");
       }
    }
 
@@ -57,7 +58,7 @@ public class EventService {
          return this.eventRepository.findByLocation(location);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new InternalServerErrorException("Error finding events.");
+         throw new ResourceNotFoundException("Error finding events.");
       }
    }
 
@@ -66,7 +67,7 @@ public class EventService {
          return this.eventRepository.findByOrganizerUsername(username);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new InternalServerErrorException("Error finding events.");
+         throw new ResourceNotFoundException("Error finding events.");
       }
    }
 
@@ -75,7 +76,7 @@ public class EventService {
          return this.eventRepository.findById(id).orElseThrow(() -> new InternalServerErrorException("Event not found."));
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new InternalServerErrorException("Error finding event by id.");
+         throw new ResourceNotFoundException("Error finding event by id.");
       }
    }
 
