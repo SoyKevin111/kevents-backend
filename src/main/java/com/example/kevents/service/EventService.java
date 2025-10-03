@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.kevents.exceptions.ServerInternalError;
+import com.example.kevents.exceptions.model.InternalServerErrorException;
 import com.example.kevents.model.Event;
 import com.example.kevents.repository.EventRepository;
 import com.example.kevents.validation.EventValidation;
@@ -26,11 +25,10 @@ public class EventService {
    public Event create(Event event) {
       this.eventValidation.validateOverlapsDate(event);
       try {
-
          return this.eventRepository.save(event);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error creating event.");
+         throw new InternalServerErrorException("Error creating event.");
       }
    }
 
@@ -38,7 +36,7 @@ public class EventService {
          try {
          return this.eventRepository.save(event);
       } catch (Exception e) {
-         throw new ServerInternalError("Error updating event.");
+         throw new InternalServerErrorException("Error updating event.");
       }
    }
 
@@ -50,7 +48,7 @@ public class EventService {
                .collect(Collectors.toList());
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error finding events by date.");
+         throw new InternalServerErrorException("Error finding events by date.");
       }
    }
 
@@ -59,7 +57,7 @@ public class EventService {
          return this.eventRepository.findByLocation(location);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error finding events.");
+         throw new InternalServerErrorException("Error finding events.");
       }
    }
 
@@ -68,16 +66,16 @@ public class EventService {
          return this.eventRepository.findByOrganizerUsername(username);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error finding events.");
+         throw new InternalServerErrorException("Error finding events.");
       }
    }
 
    public Event findById(Long id) {
       try {
-         return this.eventRepository.findById(id).orElseThrow(() -> new ServerInternalError("Event not found."));
+         return this.eventRepository.findById(id).orElseThrow(() -> new InternalServerErrorException("Event not found."));
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error finding event by id.");
+         throw new InternalServerErrorException("Error finding event by id.");
       }
    }
 
@@ -86,7 +84,7 @@ public class EventService {
          this.eventRepository.deleteById(id);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error deleting event by id.");
+         throw new InternalServerErrorException("Error deleting event by id.");
       }
    }
 

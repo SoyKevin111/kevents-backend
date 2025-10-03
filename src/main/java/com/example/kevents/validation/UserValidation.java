@@ -1,10 +1,9 @@
 package com.example.kevents.validation;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.kevents.exceptions.ServerInternalError;
+import com.example.kevents.exceptions.model.InternalServerErrorException;
 import com.example.kevents.model.User;
 import com.example.kevents.repository.UserRepository;
 
@@ -16,7 +15,7 @@ public class UserValidation {
 
     public void validateEmail(User user) {
         if (this.userRepository.existsByEmail(user.getEmail())) {
-            throw new ServerInternalError("Email already exists.");
+            throw new InternalServerErrorException("Email already exists.");
         }
     }
 

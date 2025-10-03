@@ -1,10 +1,15 @@
 package com.example.kevents.exceptions;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.example.kevents.dto.FieldErrorDTO;
+import com.example.kevents.exceptions.model.CustomBaseException;
+import com.example.kevents.exceptions.model.InternalServerErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -14,23 +19,62 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-   // Validacion generica
-   @ExceptionHandler(ServerInternalError.class)
-   public ResponseEntity<ExceptionErrorResponse> handleGeneric(ServerInternalError ex) {
-      String error = ex.getError();
-      String message = ex.getMessage();
+   //Validacion para excepciones personalizadas
+   @ExceptionHandler(CustomBaseException.class)
+   public ResponseEntity<ExceptionErrorResponse> handleCustomExceptions(CustomBaseException ex) {
+      ExceptionErrorResponse response = ExceptionErrorResponse.builder()
+         .timestamp(LocalDateTime.now())
+         .status(ex.getStatus().value())
+         .error("[" + ex.getStatus().getReasonPhrase() + "]")
+         .message(ex.getMessage())
+         .build();
+
+      return ResponseEntity.status(ex.getStatus()).body(response);
+   }
+
+
+   //Validaciones de propiedades con @Valid
+   @ExceptionHandler(MethodArgumentNotValidException.class)
+   public ResponseEntity<ExceptionErrorResponse> handleProperty(
+      MethodArgumentNotValidException ex
+   ) {
+      List<FieldErrorDTO> errors = ex.getBindingResult().getFieldErrors()
+         .stream()
+         .map(err -> new FieldErrorDTO(err.getField(), err.getDefaultMessage()))
+         .toList();
 
       ExceptionErrorResponse response = ExceptionErrorResponse.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .error((error == null || error.isEmpty()) ? "[Server Internal Error]" : error)
-            .message((message == null || message.isEmpty()) ? "Server Internal Error" : message)
-            .build();
+         .timestamp(LocalDateTime.now())
+         .status(HttpStatus.BAD_REQUEST.value())
+         .error("[Request Error]")
+         .errors(errors)
+         .build();
 
       return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(response);
+         .status(HttpStatus.BAD_REQUEST)
+         .body(response);
    }
+
+
+//   // Validacion generica
+//   @ExceptionHandler(InternalServerErrorException.class)
+//   public ResponseEntity<ExceptionErrorResponse> handleGeneric(InternalServerErrorException ex) {
+//      String error = ex.getError();
+//      String message = ex.getMessage();
+//
+//      ExceptionErrorResponse response = ExceptionErrorResponse.builder()
+//            .timestamp(LocalDateTime.now())
+//            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+//            .error((error == null || error.isEmpty()) ? "[Server Internal Error]" : error)
+//            .message((message == null || message.isEmpty()) ? "Server Internal Error" : message)
+//            .build();
+//
+//      return ResponseEntity
+//            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+//            .body(response);
+//   }
+
+
 
    // validacion enum
    @ExceptionHandler(HttpMessageNotReadableException.class)

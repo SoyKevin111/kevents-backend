@@ -3,10 +3,9 @@ package com.example.kevents.service;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.kevents.exceptions.ServerInternalError;
+import com.example.kevents.exceptions.model.InternalServerErrorException;
 import com.example.kevents.model.User;
 import com.example.kevents.repository.UserRepository;
 import com.example.kevents.validation.UserValidation;
@@ -27,7 +26,7 @@ public class UserService {
          return this.userRepository.save(user);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error creating user.");
+         throw new InternalServerErrorException("Error creating user.");
       }
    }
 
@@ -36,26 +35,26 @@ public class UserService {
          return this.userRepository.findAll();
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error finding users.");
+         throw new InternalServerErrorException("Error finding users.");
       }
    }
 
    public User findById(Long id) {
       try {
-         return this.userRepository.findById(id).orElseThrow(() -> new ServerInternalError("User not found xd."));
+         return this.userRepository.findById(id).orElseThrow(() -> new InternalServerErrorException("User not found xd."));
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error finding user by id.");
+         throw new InternalServerErrorException("Error finding user by id.");
       }
    }
 
    public User findByEmail(String email) {
       try {
          return this.userRepository.findByEmail(email)
-               .orElseThrow(() -> new ServerInternalError("User not found for view serie."));
+               .orElseThrow(() -> new InternalServerErrorException("User not found for view serie."));
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error finding user by email.");
+         throw new InternalServerErrorException("Error finding user by email.");
       }
    }
 

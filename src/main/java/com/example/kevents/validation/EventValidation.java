@@ -3,11 +3,10 @@ package com.example.kevents.validation;
 import java.time.LocalDate;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.kevents.dto.request.EventRequest;
-import com.example.kevents.exceptions.ServerInternalError;
+import com.example.kevents.exceptions.model.InternalServerErrorException;
 import com.example.kevents.model.Event;
 import com.example.kevents.repository.EventRepository;
 
@@ -23,7 +22,7 @@ public class EventValidation {
                 .forEach(e -> {
                     if (!newEvent.getEndDate().isBefore(e.getStartDate()) &&
                             !newEvent.getStartDate().isAfter(e.getEndDate())) {
-                        throw new ServerInternalError("Error, date overlaps with event: " + e.getTitle());
+                        throw new InternalServerErrorException("Error, date overlaps with event: " + e.getTitle());
                     }
                 });
         ;

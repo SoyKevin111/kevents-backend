@@ -3,10 +3,9 @@ package com.example.kevents.service;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.kevents.exceptions.ServerInternalError;
+import com.example.kevents.exceptions.model.InternalServerErrorException;
 import com.example.kevents.model.Event;
 import com.example.kevents.model.Reservation;
 import com.example.kevents.model.Status;
@@ -31,7 +30,7 @@ public class ReservationService {
          return this.reservationRepository.save(reservation);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error creating reservation.");
+         throw new InternalServerErrorException("Error creating reservation.");
       }
    }
 
@@ -40,13 +39,13 @@ public class ReservationService {
          return this.reservationRepository.findByAttendeeEmail(gmail);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error finding reservations by attendee email.");
+         throw new InternalServerErrorException("Error finding reservations by attendee email.");
       }
    }
 
    public List<Reservation> findByEventId(Long id) {
       Event event = eventRepository.findById(id)
-            .orElseThrow(() -> new ServerInternalError("Event not found for find reservation."));
+            .orElseThrow(() -> new InternalServerErrorException("Event not found for find reservation."));
       return this.reservationRepository.findByEventAndStatusNot(event, Status.CANCELLED);
    }
 
@@ -56,25 +55,25 @@ public class ReservationService {
          return this.reservationRepository.save(reservation);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error updating reservation.");
+         throw new InternalServerErrorException("Error updating reservation.");
       }
    }
 
    public void cancelById(Long id) {
       Reservation reservationFind = this.reservationRepository.findById(id)
-            .orElseThrow(() -> new ServerInternalError("Reservation not found for cancel reservation."));
+            .orElseThrow(() -> new InternalServerErrorException("Reservation not found for cancel reservation."));
       try {
          reservationFind.setStatus(Status.CANCELLED);
          this.reservationRepository.save(reservationFind);
       } catch (Exception e) {
          log.error(e.getMessage());
-         throw new ServerInternalError("Error canceling reservation.");
+         throw new InternalServerErrorException("Error canceling reservation.");
       }
    }
 
    public Reservation findById(Long id) {
       return this.reservationRepository.findById(id)
-            .orElseThrow(() -> new ServerInternalError("Error finding reservation."));
+            .orElseThrow(() -> new InternalServerErrorException("Error finding reservation."));
    }
 
 }

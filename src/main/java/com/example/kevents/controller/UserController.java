@@ -16,6 +16,9 @@ import com.example.kevents.model.User;
 import com.example.kevents.service.UserService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,30 +31,22 @@ public class UserController {
    @PostMapping
    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest) {
       User user = this.userMapper.toEntity(userRequest);
-      try {
-         return ResponseEntity.ok(this.userService.create(user));
-      } catch (Exception e) {
-         return ResponseEntity.badRequest().body(e.getMessage());
-      }
+      URI location = ServletUriComponentsBuilder
+         .fromCurrentRequest()
+         .path("/{id}")
+         .buildAndExpand(user.getId())
+         .toUri();
+      return ResponseEntity.created(location).body(this.userService.create(user));
    }
 
    @GetMapping
-   public ResponseEntity<?> findAllUsers() {
-      try {
-         return ResponseEntity.ok(this.userService.findAll());
-      } catch (Exception e) {
-         return ResponseEntity.badRequest().body(e.getMessage());
-      }
+   public ResponseEntity<?> getUsers() {
+      return ResponseEntity.ok(this.userService.findAll());
    }
 
-   @GetMapping("/{id}") 
-   public ResponseEntity<?> viewProfile(@PathVariable Long id,
-         org.springframework.security.core.Authentication authentication) {   //! require auth
-      try {
-         return ResponseEntity.ok(this.userService.findByEmail(authentication.getName()));
-      } catch (Exception e) {
-         return ResponseEntity.badRequest().body(e.getMessage());
-      }
+   @GetMapping("/{id}")
+   public ResponseEntity<?> getProfile(@PathVariable Long id, org.springframework.security.core.Authentication authentication) {   //! require auth
+      return ResponseEntity.ok(this.userService.findByEmail(authentication.getName()));
    }
 
 }

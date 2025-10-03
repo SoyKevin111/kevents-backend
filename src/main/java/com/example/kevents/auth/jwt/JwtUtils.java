@@ -17,7 +17,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.kevents.exceptions.ServerInternalError;
+import com.example.kevents.exceptions.model.InternalServerErrorException;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -69,7 +69,7 @@ public class JwtUtils {
                     .build();
             return verifier.verify(token);
         } catch (JWTVerificationException e) {
-            throw new ServerInternalError("Token no valido: " + e.getMessage());
+            throw new InternalServerErrorException("Token no valido: " + e.getMessage());
         }
     }
 
