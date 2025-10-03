@@ -1,9 +1,10 @@
 package com.example.kevents.controller;
 
-import com.example.kevents.dto.request.UserCreateRequest;
-import com.example.kevents.dto.request.UserUpdateRequest;
+import com.example.kevents.dto.request.UserRequestDTO;
+import com.example.kevents.dto.validation.onCreate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,7 @@ public class UserController {
    private final UserMapper userMapper;
 
    @PostMapping
-   public ResponseEntity<?> createUser(@Valid @RequestBody UserCreateRequest dto) {
+   public ResponseEntity<?> createUser(@Validated(onCreate.class) @RequestBody UserRequestDTO dto) {
       User user = this.userMapper.toEntity(dto);
       URI location = ServletUriComponentsBuilder
          .fromCurrentRequest()

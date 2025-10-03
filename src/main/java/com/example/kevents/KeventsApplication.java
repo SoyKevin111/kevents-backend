@@ -12,7 +12,7 @@ public class KeventsApplication {
 		@SuppressWarnings("unused")
 		Dotenv dotenv = Dotenv.load();
 		var context = SpringApplication.run(KeventsApplication.class, args);
-		System.out.println("Swagger UI: http://localhost:8080/swagger-ui.html");
+		System.out.println("Swagger UI: http://localhost:8080/kevents/swagger-ui/index.html");
 	}
 
 }

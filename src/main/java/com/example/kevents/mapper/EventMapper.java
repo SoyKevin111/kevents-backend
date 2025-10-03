@@ -1,7 +1,6 @@
 package com.example.kevents.mapper;
 
-import com.example.kevents.dto.request.EventCreateRequest;
-import com.example.kevents.dto.request.EventUpdateRequest;
+import com.example.kevents.dto.request.EventRequestDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,7 +13,7 @@ public interface EventMapper {
     @Mapping(target = "organizer", ignore = true)   
     @Mapping(target = "startDate", ignore = true)   
     @Mapping(target = "endDate", ignore = true) 
-    Event toEntity(EventCreateRequest dto);
+    Event toEntity(EventRequestDTO dto);
 
 
 

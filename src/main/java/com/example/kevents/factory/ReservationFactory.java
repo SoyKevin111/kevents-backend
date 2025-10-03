@@ -5,8 +5,7 @@ import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import com.example.kevents.dto.request.ReservationCreateRequest;
-import com.example.kevents.dto.request.ReservationUpdateRequest;
+import com.example.kevents.dto.request.ReservationRequestDTO;
 import com.example.kevents.model.Reservation;
 import com.example.kevents.service.EventService;
 import com.example.kevents.service.ReservationService;
@@ -22,7 +21,7 @@ public class ReservationFactory {
     private final ReservationService reservationService;
     private final InputValidation inputValidation;
 
-    public Reservation forCreate(ReservationCreateRequest dto) {
+    public Reservation forCreate(ReservationRequestDTO dto) {
         Reservation reservation = new Reservation();
         reservation.setSeats(dto.getSeats());
         reservation.setAttendee(userService.findById(dto.getAttendeeId()));
@@ -32,9 +31,9 @@ public class ReservationFactory {
         return reservation;
     }
 
-    public Reservation forUpdate(ReservationUpdateRequest dto, Long id) {
+    public Reservation forUpdate(ReservationRequestDTO dto, Long id) {
         Reservation reservationFind = this.reservationService.findById(id);
-        this.inputValidation.setIfNotNull(dto.getState(), e -> reservationFind.setStatus(e));
+        this.inputValidation.setIfNotNull(dto.getStatus(), e -> reservationFind.setStatus(e));
         this.inputValidation.setIfNotInteger(dto.getSeats(), e -> reservationFind.setSeats(e));
         return reservationFind;
     }

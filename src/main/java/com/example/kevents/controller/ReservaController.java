@@ -1,10 +1,12 @@
 package com.example.kevents.controller;
 
+import com.example.kevents.dto.validation.onCreate;
 import com.example.kevents.model.Reservation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.kevents.dto.request.ReservationCreateRequest;
-import com.example.kevents.dto.request.ReservationUpdateRequest;
+import com.example.kevents.dto.request.ReservationRequestDTO;
 import com.example.kevents.factory.ReservationFactory;
 import com.example.kevents.service.ReservationService;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -31,8 +32,8 @@ public class ReservaController {
    private final ReservationFactory reservationFactory;
 
    @PostMapping
-   public ResponseEntity<?> createReservation(@Valid  @RequestBody ReservationCreateRequest reservationCreateRequest) {
-      Reservation reservation = this.reservationService.create(this.reservationFactory.forCreate(reservationCreateRequest));
+   public ResponseEntity<?> createReservation(@Validated(onCreate.class)  @RequestBody ReservationRequestDTO reservationRequestDTO) {
+      Reservation reservation = this.reservationService.create(this.reservationFactory.forCreate(reservationRequestDTO));
       URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(reservation.getId()).toUri();
       return ResponseEntity.created(location).body(reservation);
    }
@@ -48,7 +49,7 @@ public class ReservaController {
    }
 
    @PutMapping("/{id}")
-   public ResponseEntity<?> updateReservation(@RequestBody ReservationUpdateRequest request, @PathVariable Long id) {
+   public ResponseEntity<?> updateReservation(@RequestBody ReservationRequestDTO request, @PathVariable Long id) {
          return ResponseEntity.ok(this.reservationService.update(this.reservationFactory.forUpdate(request, id)));
    }
 
